@@ -81,7 +81,7 @@ class Vials:
     def move(self, x_num, y_num):
         self.vials[x_num].mix_in(self.vials[y_num])
 
-    def move_until_blank_vial(self, moves=None, depth=0):
+    def move_until_empty_vial(self, moves=None, depth=0):
         depth += 1
         if depth == 1:
             self.loop_counter = 0
@@ -105,7 +105,7 @@ class Vials:
                 moves.pop()
                 continue
             # Remove any arrays, in arrays, in arrays.
-            recursive_moves = self.move_until_blank_vial(moves, depth=depth)
+            recursive_moves = self.move_until_empty_vial(moves, depth=depth)
             for value in recursive_moves:
                 good_moves.append(value)
             self.vials = copy.deepcopy(current_vials)
@@ -142,7 +142,7 @@ def solve(puzzle):
         return
     while True:
         try:
-            moves = vials.move_until_blank_vial()
+            moves = vials.move_until_empty_vial()
         except VialException:
             print("Probably an invalid setup.")
             break
