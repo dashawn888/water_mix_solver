@@ -87,7 +87,7 @@ class Vials:
             self.loop_counter = 0
         self.loop_counter += 1
         current_vials = copy.deepcopy(self.vials)
-        moves = copy.deepcopy(moves) or []
+        moves = moves or []
         good_moves = []
         possible_moves = self.get_possible_moves()
         if not possible_moves:
@@ -100,7 +100,7 @@ class Vials:
             self.move(*move)
             moves.append(move)
             if is_empty_vial(self.vials):
-                good_moves.append(copy.deepcopy(moves))
+                good_moves.append(copy.copy(moves))
                 self.vials = copy.deepcopy(current_vials)
                 moves.pop()
                 continue
