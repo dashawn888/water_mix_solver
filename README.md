@@ -4,7 +4,7 @@ If you have ever played a water solver puzzle like this [Juice Sort Puzzle!](htt
 
 This is an algorithm to solve a level.
 
-It works of the concept of always having an empty vial.  It goes through all possible moves until it fines a set of moves that creates an empty vial. It then repeats the task with the next configuration.
+It works off the concept of always having an empty vial.  It goes through all possible moves until it findes a set of moves that creates an empty vial. It then repeats the task with the next configuration.
 
 To build your level place all the vials into the main.py original_vials.
 
@@ -22,5 +22,3 @@ To build your level place all the vials into the main.py original_vials.
         Vial(10, [PE, PU, BR, GR]),
         Vial(11, [TU, PU, LG, AQ]),
     ]
-    
-If you want the solver to find better answers at the cost of time adjust MAX_DEPTH value to something higher.
