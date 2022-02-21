@@ -158,9 +158,6 @@ def solve(puzzle):
             vials.move(x, y)
         print("")
 
-# This is how far into the rabbit hole the algorithm will go before stopping and accepting the best move it currently
-# has.
-
 PE = 1  # Peach
 BL = 2  # Blue
 PI = 3  # Pink
