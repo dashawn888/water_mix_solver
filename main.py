@@ -31,7 +31,7 @@ class Vial:
     def can_mix(self, vial):
         if len(self.layers) == 4:
             return False
-        # Don't allow moving a tube that's filled with 4 colors already.
+        # Don't allow moving a vial that's filled with 4 colors already.
         if len(vial.get_top_piece()) == 4:
             return False
         if len(vial.layers) == 0:
@@ -40,7 +40,7 @@ class Vial:
             return False
         if len(self.get_top_piece()) and self.get_top_piece()[0] != vial.get_top_piece()[0]:
             return False
-        # Don't move a tube of one color to an empty tube.
+        # Don't move a vial of one color to an empty vial.
         if len(vial.layers) == len(vial.get_top_piece()) and len(self.layers) == 0:
             return False
         return True
@@ -67,7 +67,7 @@ class Vial:
 class Vials:
     def __init__(self, vials):
         self.vials = vials
-        self.loop_counter = 0
+        self.max_depth = 100000
 
     def get_possible_moves(self):
         possible_moves = set()
@@ -81,13 +81,12 @@ class Vials:
     def move(self, x_num, y_num):
         self.vials[x_num].mix_in(self.vials[y_num])
 
-    def move_until_empty_vial(self, moves=None, depth=0, max_depth=100000):
+    def move_until_empty_vial(self, moves=None, depth=0):
         depth += 1
         if depth == 1:
-            self.loop_counter = 0
-        if depth > max_depth:
+            self.max_depth = 100000
+        if depth > self.max_depth:
             return []
-        self.loop_counter += 1
         current_vials = copy.deepcopy(self.vials)
         moves = moves or []
         good_moves = []
@@ -106,14 +105,14 @@ class Vials:
                 self.vials = copy.deepcopy(current_vials)
                 moves.pop()
                 continue
-            recursive_moves = self.move_until_empty_vial(moves, depth=depth, max_depth=max_depth)
+            recursive_moves = self.move_until_empty_vial(moves, depth=depth)
             for value in recursive_moves:
                 good_moves.append(value)
                 # Since we have a move cancel out of checking any moves that are longer than this one.
-                max_depth = len(value)
+                self.max_depth = len(value) - 1
             self.vials = copy.deepcopy(current_vials)
             moves.pop()
-            if self.loop_counter > max_depth and good_moves:
+            if depth > self.max_depth:
                 return good_moves
         return good_moves
 
@@ -149,13 +148,15 @@ def solve(puzzle):
         except VialException:
             print("Probably an invalid setup.")
             break
+        if not moves:
+            print("Puzzle is not solvable!")
+            break
         if not len(moves[0]):
             break
         for x, y in min(moves):
             print("Move " + str(y + 1) + " to " + str(x + 1))
             vials.move(x, y)
         print("")
-
 
 # This is how far into the rabbit hole the algorithm will go before stopping and accepting the best move it currently
 # has.
@@ -179,17 +180,17 @@ PL = 15  # Plum purple
 if __name__ == "__main__":
     # Put all the puzzle pieces here. If there are more vials add more.
     original_vials = [
-        Vial(0, [PL, AQ, OR, RE]),
-        Vial(1, [PE, OR, GR, PE]),
-        Vial(2, [BR, FO]),
-        Vial(3, [LG, BR, PL, OR]),
-        Vial(4, [GR, AQ, GR, PU]),
-        Vial(5, [RE, RE, FO]),
-        Vial(6, [AQ, BR]),
-        Vial(7, [PL, PU, FO]),
-        Vial(8, [GR, FO, LG]),
-        Vial(9, [LG, PE, PU, AQ]),
-        Vial(10, [PL, BR, LG, PU]),
-        Vial(11, [PE, OR, RE]),
+        Vial(0, [DG, BR, TU, GR]),
+        Vial(1, [PU, PU, LG]),
+        Vial(2, [FO, AQ, LG]),
+        Vial(3, [FO, TU, PE, AQ]),
+        Vial(4, [BL, BL, AQ, LG]),
+        Vial(5, [BR, DG, BR, FO]),
+        Vial(6, [PE]),
+        Vial(7, [BL, TU, DG, BL]),
+        Vial(8, [FO, GR]),
+        Vial(9, [DG, GR, PE]),
+        Vial(10, [PE, PU, BR, GR]),
+        Vial(11, [TU, PU, LG, AQ]),
     ]
     solve(original_vials)
